@@ -42,3 +42,10 @@ class maestria:
 
     def no_romper(self):
         return 0.1 + (0.02 * self.nivel)
+
+class maestriaenemiga(maestria):
+    def __init__(self, nombre, nivel = 1):
+        super().__init__(nombre, nivel = 1)
+
+    def ganar_exp(self, cantidad):
+        return 

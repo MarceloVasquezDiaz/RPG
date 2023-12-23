@@ -7,7 +7,7 @@ class Criatura:
     def __init__(self, nombre, tipo, arma, exp, maestria):
         self.nombre = nombre
         self.tipo = tipo
-        self.fuerza = random.randint(1, 20)
+        self.fuerza = 20 #random.randint(1, 20)
         self.inteligencia = random.randint(1, 20)
         self.defensa = random.randint(1, 20)
         self.despecial = random.randint(1, 20)
@@ -24,15 +24,17 @@ class Criatura:
             ataque_total = self.fuerza
         #Probabilidad de fallar
         if self.maestria.prop_golpe() >= random.random():
-            self.dañoinfringido(enemigo, ataque_total)    
+            self.dañoinfringido(enemigo, ataque_total)
+            self.arma.desgaste()    
         else:
             print(f"{self.nombre} ha fallado.")
             time.sleep(1)
 
     def muere(self, enemigo):
-        if self.salud <= 0:
-            print(f"{self.nombre} ha muerto")
+        if enemigo.salud <= 0:
+            print(f"{enemigo.nombre} ha muerto")
             self.maestria.ganar_exp(enemigo.exp)
+            self.arma.caracteristicas()
 
     def dañoinfringido(self, enemigo, daño):
 
@@ -50,7 +52,7 @@ class Criatura:
             print(f"{self.nombre} ha infrindo{mensaje_critico} {dañoreal} puntos de daño.")
             print(f"{enemigo.nombre} tiene {enemigo.salud} puntos de vida.")
             time.sleep(1)
-            enemigo.muere(enemigo)
+            self.muere(enemigo)
         else:
             print(f"{enemigo.nombre} no ha sufrido daño.")
             time.sleep(1)
@@ -63,9 +65,11 @@ class Criatura:
 
 #Personajes
 espadachin = maestria.maestria("Espadachin")
+luchador = maestria.maestriaenemiga("Luchador")
 Esp = arma.Cortante("Espada de hierro", 5, 100, espadachin)
+combos = arma.Contundente("Combos", 1, 1000, luchador)
 Gobito = Criatura("Gobito", "Goblin", Esp, 0, espadachin)
-Babosa = Criatura("Babosa", "Babosa", None, 2, espadachin)
+Babosa = Criatura("Babosa", "Babosa", combos, 2, luchador)
 Gobito.estadisticas()
 Babosa.estadisticas()
 
