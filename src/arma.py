@@ -1,6 +1,6 @@
 import maestria
 import random
-
+import time
 class Arma:
     def __init__(self, nombre, estadistica, durabilidad, maestria):
         self.nombre = nombre
@@ -25,13 +25,38 @@ class Arma:
 
 #tipos de daño 
 class Cortante(Arma):
+    #Se asocia a espadas, dagas, hachas
     def __init__(self, nombre, estadistica, durabilidad, maestria):
         super().__init__(nombre,estadistica, durabilidad, maestria)
 
-    def calculo_daño(self, portador):
-        return (self.estadistica + portador.fuerza)
+    def calculo_daño(self, portador, enemigo):
+        daño = self.estadistica + portador.fuerza + self.maestria.extra_dmg()
+        for ataque in range(int(1 + self.maestria.velocidad_de_ataque() + (portador.agilidad/100))):
+            #Prop de crit
+            if self.maestria.prop_crit() > random.random() + (enemigo.agilidad/100):
+                daño = int(daño * self.maestria.multipli_crit())
+                mensaje_critico = " golpe critico"
+            else:
+                mensaje_critico = ""
+
+            #Calculo daño/defensa
+            if int(daño) > int((enemigo.defensa)/2):
+                dañoreal = daño - int((enemigo.defensa)/2)
+                enemigo.salud = enemigo.salud - dañoreal
+                self.desgaste()
+                print(f"{portador.nombre} ha infrindo{mensaje_critico} {dañoreal} puntos de daño.")
+                print(f"{enemigo.nombre} tiene {enemigo.salud} puntos de vida.")
+                time.sleep(1)
+                portador.muere(enemigo)
+                
+            else:
+                print(f"{enemigo.nombre} no ha sufrido daño.")
+                time.sleep(1)
+
+#        return (self.estadistica + portador.fuerza)
 
 class Contundente(Arma):
+    #Se asocia a mazos, baras, daños contundentes.
     def __init__(self, nombre, estadistica, durabilidad, maestria):
         super().__init__(nombre,estadistica, durabilidad, maestria)
 
@@ -39,6 +64,7 @@ class Contundente(Arma):
         return self.estadistica * portador.fuerza
 
 class Punzante(Arma):
+    #Se asocia a lanzas, flechas, etc.
     def __init__(self, nombre, estadistica, durabilidad, maestria):
         super().__init__(nombre,estadistica, durabilidad, maestria)
 
@@ -51,7 +77,3 @@ class Magico(Arma):
 
     def calculo_daño(self, portador):
         return self.estadistica + portador.inteligencia
-
-espadachin = maestria.maestria("Espadachin", nivel = 1)
-Esp = Cortante("Espada de hierro", 5, 100, espadachin)
-Esp.caracteristicas()

@@ -26,7 +26,7 @@ class maestria:
         return self.exp
 
     def prop_golpe(self):
-        return 0.7 + (0.02 * self.nivel)
+        return 0.6 + (0.02 * self.nivel)
 
     def extra_dmg(self):
         return self.nivel

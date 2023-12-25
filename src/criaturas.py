@@ -18,14 +18,13 @@ class Criatura:
         self.maestria = maestria
 
     def atacar(self, enemigo):
-        if self.arma is not None:
-            ataque_total = self.arma.calculo_daño(self)
-        else:
-            ataque_total = self.fuerza
+#       if self.arma is not None:
+#           ataque_total = self.arma.calculo_daño(self)
+#       else:
+#            ataque_total = self.fuerza
         #Probabilidad de fallar
         if self.maestria.prop_golpe() >= random.random():
-            self.dañoinfringido(enemigo, ataque_total)
-            self.arma.desgaste()    
+            self.arma.calculo_daño(self, enemigo) 
         else:
             print(f"{self.nombre} ha fallado.")
             time.sleep(1)
@@ -36,10 +35,17 @@ class Criatura:
             self.maestria.ganar_exp(enemigo.exp)
             self.arma.caracteristicas()
 
-    def dañoinfringido(self, enemigo, daño):
+    def estadisticas(self):
+        print(f"{self.nombre}, Raza: {self.tipo}, Ataque: {self.fuerza}, Inteligencia: {self.inteligencia}, "
+              f"Defensa: {self.defensa}, Agilidad: {self.agilidad}, Salud: {self.salud}")
+        if self.arma is not None:
+            print(f"Arma: {self.arma.nombre}")
+
+'''
+    def daño_infringido(self, enemigo, daño):
 
         #Probabilidad de critico
-        if self.maestria.prop_crit() > random.random():
+        if self.maestria.prop_crit() > random.random() + (enemigo.agilidad/100):
             daño = int(daño * self.maestria.multipli_crit())
             mensaje_critico = " golpe critico"
         else:
@@ -56,18 +62,15 @@ class Criatura:
         else:
             print(f"{enemigo.nombre} no ha sufrido daño.")
             time.sleep(1)
+'''
 
-    def estadisticas(self):
-        print(f"{self.nombre}, Raza: {self.tipo}, Ataque: {self.fuerza}, Inteligencia: {self.inteligencia}, "
-              f"Defensa: {self.defensa}, Agilidad: {self.agilidad}, Salud: {self.salud}")
-        if self.arma is not None:
-            print(f"Arma: {self.arma.nombre}")
+
 
 #Personajes
 espadachin = maestria.maestria("Espadachin")
 luchador = maestria.maestriaenemiga("Luchador")
 Esp = arma.Cortante("Espada de hierro", 5, 100, espadachin)
-combos = arma.Contundente("Combos", 1, 1000, luchador)
+combos = arma.Cortante("Combos", 1, 1000, luchador)
 Gobito = Criatura("Gobito", "Goblin", Esp, 0, espadachin)
 Babosa = Criatura("Babosa", "Babosa", combos, 2, luchador)
 Gobito.estadisticas()
