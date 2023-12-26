@@ -1,6 +1,7 @@
 import maestria
 import random
 import time
+
 class Arma:
     def __init__(self, nombre, estadistica, durabilidad, maestria):
         self.nombre = nombre
@@ -31,45 +32,83 @@ class Cortante(Arma):
 
     def calculo_daño(self, portador, enemigo):
         daño = self.estadistica + portador.fuerza + self.maestria.extra_dmg()
-        for ataque in range(int(1 + self.maestria.velocidad_de_ataque() + (portador.agilidad/100))):
-            #Prop de crit
-            if self.maestria.prop_crit() > random.random() + (enemigo.agilidad/100):
-                daño = int(daño * self.maestria.multipli_crit())
-                mensaje_critico = " golpe critico"
-            else:
-                mensaje_critico = ""
+        ngolpes = round(1 + self.maestria.velocidad_de_ataque() + (portador.agilidad/100))
+        #Prop de crit
+        if self.maestria.prop_crit() > random.random() + (enemigo.agilidad/100):
+            daño = int(daño * self.maestria.multipli_crit())
+            mensaje_critico = " golpe critico"
+        else:
+            mensaje_critico = ""
 
-            #Calculo daño/defensa
-            if int(daño) > int((enemigo.defensa)/2):
-                dañoreal = daño - int((enemigo.defensa)/2)
-                enemigo.salud = enemigo.salud - dañoreal
-                self.desgaste()
-                print(f"{portador.nombre} ha infrindo{mensaje_critico} {dañoreal} puntos de daño.")
-                print(f"{enemigo.nombre} tiene {enemigo.salud} puntos de vida.")
-                time.sleep(1)
-                portador.muere(enemigo)
+        #Calculo daño/defensa
+        if int(daño) > int((enemigo.defensa)/2):
+            dañoreal = (daño - int((enemigo.defensa)/2)) * ngolpes
+            enemigo.salud = enemigo.salud - dañoreal
+            self.desgaste()
+            print(f"{portador.nombre} ha infrindo{mensaje_critico} {dañoreal} puntos de daño.")
+            print(f"{enemigo.nombre} tiene {enemigo.salud} puntos de vida.")
+            time.sleep(1)
+            portador.muere(enemigo)
                 
-            else:
-                print(f"{enemigo.nombre} no ha sufrido daño.")
-                time.sleep(1)
-
-#        return (self.estadistica + portador.fuerza)
+        else:
+            print(f"{enemigo.nombre} no ha sufrido daño.")
+            time.sleep(1)
 
 class Contundente(Arma):
     #Se asocia a mazos, baras, daños contundentes.
     def __init__(self, nombre, estadistica, durabilidad, maestria):
         super().__init__(nombre,estadistica, durabilidad, maestria)
 
-    def calculo_daño(self, portador):
-        return self.estadistica * portador.fuerza
+    def calculo_daño(self, portador, enemigo):
+        daño = self.estadistica * (portador.fuerza + self.maestria.extra_dmg())
+        ngolpes = int(1 + int((self.maestria.velocidad_de_ataque() + (portador.agilidad/100))/2))
+        #Prop de crit
+        if self.maestria.prop_crit() > random.random() + (enemigo.agilidad/100):
+            daño = int(daño * self.maestria.multipli_crit())
+            mensaje_critico = " golpe critico"
+        else:
+            mensaje_critico = ""
+
+        #Calculo daño/defensa
+        if int(daño) > int(enemigo.defensa):
+            dañoreal = (daño - int(enemigo.defensa)) * ngolpes
+            enemigo.salud = enemigo.salud - dañoreal
+            self.desgaste()
+            print(f"{portador.nombre} ha infrindo{mensaje_critico} {dañoreal} puntos de daño.")
+            print(f"{enemigo.nombre} tiene {enemigo.salud} puntos de vida.")
+            time.sleep(1)
+            portador.muere(enemigo) 
+        else:
+            print(f"{enemigo.nombre} no ha sufrido daño.")
+            time.sleep(1)
 
 class Punzante(Arma):
     #Se asocia a lanzas, flechas, etc.
     def __init__(self, nombre, estadistica, durabilidad, maestria):
         super().__init__(nombre,estadistica, durabilidad, maestria)
 
-    def calculo_daño(self, portador):
-        return self.estadistica + int(portador.fuerza/2) + (2*(portador.agilidad))
+    def calculo_daño(self, portador, enemigo):
+        daño = self.estadistica + int(portador.fuerza/2) + self.maestria.extra_dmg()
+        ngolpes = round(1 + round(self.maestria.velocidad_de_ataque() + (portador.agilidad/50)))
+        #Prop de crit
+        if self.maestria.prop_crit() > random.random() + (enemigo.agilidad/100):
+            daño = int(daño * self.maestria.multipli_crit())
+            mensaje_critico = " golpe critico"
+        else:
+            mensaje_critico = ""
+
+        #Calculo daño/defensa
+        if int(daño) > int((enemigo.defensa)/4):
+            dañoreal = (daño - int((enemigo.defensa)/4)) * ngolpes
+            enemigo.salud = enemigo.salud - dañoreal
+            self.desgaste()
+            print(f"{portador.nombre} ha infrindo{mensaje_critico} {dañoreal} puntos de daño.")
+            print(f"{enemigo.nombre} tiene {enemigo.salud} puntos de vida.")
+            time.sleep(1)
+            portador.muere(enemigo) 
+        else:
+            print(f"{enemigo.nombre} no ha sufrido daño.")
+            time.sleep(1)
 
 class Magico(Arma):
     def __init__(self, nombre, estadistica, durabilidad, maestria):
