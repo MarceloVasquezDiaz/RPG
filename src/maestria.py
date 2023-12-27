@@ -1,6 +1,6 @@
 #La maestria de nivel permite mejorar tus habilidades con las armas
 
-class maestria:
+class Maestria:
     def __init__(self, nombre, nivel = 1):
         self.nombre = nombre
         self.nivel = nivel
@@ -43,7 +43,7 @@ class maestria:
     def no_romper(self):
         return 0.1 + (0.02 * self.nivel)
 
-class maestriaenemiga(maestria):
+class Maestriaenemiga(Maestria):
     def __init__(self, nombre, nivel = 1):
         super().__init__(nombre, nivel = 1)
 

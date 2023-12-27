@@ -43,10 +43,10 @@ class Cortante(Arma):
         #Calculo daño/defensa
         if int(daño) > int((enemigo.defensa)/2):
             dañoreal = (daño - int((enemigo.defensa)/2)) * ngolpes
-            enemigo.salud = enemigo.salud - dañoreal
+            enemigo.saludact = max(0, enemigo.saludact - dañoreal)
             self.desgaste()
             print(f"{portador.nombre} ha infrindo{mensaje_critico} {dañoreal} puntos de daño.")
-            print(f"{enemigo.nombre} tiene {enemigo.salud} puntos de vida.")
+            print(f"{enemigo.nombre} tiene {enemigo.saludact} puntos de vida.")
             time.sleep(1)
             portador.muere(enemigo)
                 
@@ -72,10 +72,10 @@ class Contundente(Arma):
         #Calculo daño/defensa
         if int(daño) > int(enemigo.defensa):
             dañoreal = (daño - int(enemigo.defensa)) * ngolpes
-            enemigo.salud = enemigo.salud - dañoreal
+            enemigo.saludact = max(0, enemigo.saludact - dañoreal)
             self.desgaste()
             print(f"{portador.nombre} ha infrindo{mensaje_critico} {dañoreal} puntos de daño.")
-            print(f"{enemigo.nombre} tiene {enemigo.salud} puntos de vida.")
+            print(f"{enemigo.nombre} tiene {enemigo.saludact} puntos de vida.")
             time.sleep(1)
             portador.muere(enemigo) 
         else:
@@ -100,10 +100,10 @@ class Punzante(Arma):
         #Calculo daño/defensa
         if int(daño) > int((enemigo.defensa)/4):
             dañoreal = (daño - int((enemigo.defensa)/4)) * ngolpes
-            enemigo.salud = enemigo.salud - dañoreal
+            enemigo.saludact = max(0, enemigo.saludact - dañoreal)
             self.desgaste()
             print(f"{portador.nombre} ha infrindo{mensaje_critico} {dañoreal} puntos de daño.")
-            print(f"{enemigo.nombre} tiene {enemigo.salud} puntos de vida.")
+            print(f"{enemigo.nombre} tiene {enemigo.saludact} puntos de vida.")
             time.sleep(1)
             portador.muere(enemigo) 
         else:
